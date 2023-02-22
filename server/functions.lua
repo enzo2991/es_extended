@@ -177,9 +177,9 @@ end
 
 function Core.SavePlayer(xPlayer, cb)
   MySQL.prepare(
-    'UPDATE `users` SET `accounts` = ?, `job` = ?, `job_grade` = ?,`job2` = ?, `job2_grade` = ?, `group` = ?, `position` = ?, `inventory` = ?, `loadout` = ? WHERE `identifier` = ?',
+    'UPDATE `users` SET `accounts` = ?, `job` = ?, `job_grade` = ?,`job2` = ?, `job2_grade` = ?, `group` = ?, `position` = ?, `inventory` = ?, `loadout` = ?, `store_point` = ? WHERE `identifier` = ?',
     {json.encode(xPlayer.getAccounts(true)), xPlayer.job.name, xPlayer.job.grade,	xPlayer.job2.name, xPlayer.job2.grade, xPlayer.group, json.encode(xPlayer.getCoords()),
-     json.encode(xPlayer.getInventory(true)), json.encode(xPlayer.getLoadout(true)), xPlayer.identifier}, function(affectedRows)
+     json.encode(xPlayer.getInventory(true)), json.encode(xPlayer.getLoadout(true)),xPlayer.storepoint, xPlayer.identifier}, function(affectedRows)
       if affectedRows == 1 then
         print(('[^2INFO^7] Saved player ^5"%s^7"'):format(xPlayer.name))
         TriggerEvent('esx:playerSaved', xPlayer.playerId, xPlayer)
@@ -199,11 +199,11 @@ function Core.SavePlayers(cb)
     for i = 1, count do
       local xPlayer = xPlayers[i]
       parameters[#parameters + 1] = {json.encode(xPlayer.getAccounts(true)), xPlayer.job.name, xPlayer.job.grade,	xPlayer.job2.name, xPlayer.job2.grade, xPlayer.group,
-                                     json.encode(xPlayer.getCoords()), json.encode(xPlayer.getInventory(true)), json.encode(xPlayer.getLoadout(true)),
+                                     json.encode(xPlayer.getCoords()), json.encode(xPlayer.getInventory(true)), json.encode(xPlayer.getLoadout(true), xPlayer.storepoint),
                                      xPlayer.identifier}
     end
     MySQL.prepare(
-      "UPDATE `users` SET `accounts` = ?, `job` = ?, `job_grade` = ?, `job2` = ?, `job2_grade` = ?, `group` = ?, `position` = ?, `inventory` = ?, `loadout` = ? WHERE `identifier` = ?",
+      "UPDATE `users` SET `accounts` = ?, `job` = ?, `job_grade` = ?, `job2` = ?, `job2_grade` = ?, `group` = ?, `position` = ?, `inventory` = ?, `loadout` = ?, `store_point` = ?  WHERE `identifier` = ?",
       parameters, function(results)
         if results then
           if type(cb) == 'function' then
