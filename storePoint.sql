@@ -1,0 +1,2 @@
+ALTER TABLE users
+ADD COLUMN `store_point` int(11) DEFAULT 0 NOT NULL
